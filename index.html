@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UE ROM Impairment Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            margin-top: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        input[type="number"] {
+            width: 60px;
+        }
+        .total {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>UE ROM Impairment Calculator</h1>
+    
+    <div class="card" id="wrist">
+        <h2>Wrist</h2>
+        <table>
+            <tr>
+                <th></th>
+                <th>Flexion</th>
+                <th>Extension</th>
+                <th>Ankylosis</th>
+                <th>Imp%</th>
+            </tr>
+            <tr>
+                <td>Angle°</td>
+                <td><input type="number" id="wrist-flexion-angle"></td>
+                <td><input type="number" id="wrist-extension-angle"></td>
+                <td></td>
+                <td rowspan="2" id="wrist-flexext-imp"></td>
+            </tr>
+            <tr>
+                <td>Imp%</td>
+                <td id="wrist-flexion-imp"></td>
+                <td id="wrist-extension-imp"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Angle°</td>
+                <td>RD: <input type="number" id="wrist-rd-angle"></td>
+                <td>UD: <input type="number" id="wrist-ud-angle"></td>
+                <td></td>
+                <td rowspan="2" id="wrist-rdud-imp"></td>
+            </tr>
+            <tr>
+                <td>Imp%</td>
+                <td id="wrist-rd-imp"></td>
+                <td id="wrist-ud-imp"></td>
+                <td></td>
+            </tr>
+        </table>
+        <p class="total">Total Wrist Impairment: <span id="wrist-total-imp"></span>%</p>
+    </div>
+
+    <div class="card" id="elbow">
+        <h2>Elbow</h2>
+        <table>
+            <tr>
+                <th></th>
+                <th>Flexion</th>
+                <th>Extension</th>
+                <th>Ankylosis</th>
+                <th>Imp%</th>
+            </tr>
+            <tr>
+                <td>Angle°</td>
+                <td><input type="number" id="elbow-flexion-angle"></td>
+                <td><input type="number" id="elbow-extension-angle"></td>
+                <td></td>
+                <td rowspan="2" id="elbow-flexext-imp"></td>
+            </tr>
+            <tr>
+                <td>Imp%</td>
+                <td id="elbow-flexion-imp"></td>
+                <td id="elbow-extension-imp"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Angle°</td>
+                <td>Pronation: <input type="number" id="elbow-pronation-angle"></td>
+                <td>Supination: <input type="number" id="elbow-supination-angle"></td>
+                <td></td>
+                <td rowspan="2" id="elbow-prosup-imp"></td>
+            </tr>
+            <tr>
+                <td>Imp%</td>
+                <td id="elbow-pronation-imp"></td>
+                <td id="elbow-supination-imp"></td>
+                <td></td>
+            </tr>
+        </table>
+        <p class="total">Total Elbow Impairment: <span id="elbow-total-imp"></span>%</p>
+    </div>
+
+    <div class="card" id="shoulder">
+        <h2>Shoulder</h2>
+        <table>
+            <tr>
+                <th></th>
+                <th>Flexion</th>
+                <th>Extension</th>
+                <th>Ankylosis</th>
+                <th>Imp%</th>
+            </tr>
+            <tr>
+                <td>Angle°</td>
+                <td><input type="number" id="shoulder-flexion-angle"></td>
+                <td><input type="number" id="shoulder-extension-angle"></td>
+                <td></td>
+                <td rowspan="2" id="shoulder-flexext-imp"></td>
+            </tr>
+            <tr>
+                <td>Imp%</td>
+                <td id="shoulder-flexion-imp"></td>
+                <td id="shoulder-extension-imp"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Angle°</td>
+                <td>Adduction: <input type="number" id="shoulder-adduction-angle"></td>
+                <td>Abduction: <input type="number" id="shoulder-abduction-angle"></td>
+                <td></td>
+                <td rowspan="2" id="shoulder-addabd-imp"></td>
+            </tr>
+            <tr>
+                <td>Imp%</td>
+                <td id="shoulder-adduction-imp"></td>
+                <td id="shoulder-abduction-imp"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Angle°</td>
+                <td>Int Rot: <input type="number" id="shoulder-introt-angle"></td>
+                <td>Ext Rot: <input type="number" id="shoulder-extrot-angle"></td>
+                <td></td>
+                <td rowspan="2" id="shoulder-rotation-imp"></td>
+            </tr>
+            <tr>
+                <td>Imp%</td>
+                <td id="shoulder-introt-imp"></td>
+                <td id="shoulder-extrot-imp"></td>
+                <td></td>
+            </tr>
+        </table>
+        <p class="total">Total Shoulder Impairment: <span id="shoulder-total-imp"></span>%</p>
+    </div>
+
+    <script>
+        // JavaScript code will be added here
+    </script>
+</body>
+</html>
