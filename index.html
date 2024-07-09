@@ -1575,10 +1575,7 @@ function calculateImpairment(angle, dataArray, angleKey, impairmentKey) {
                 return dataArray[i][impairmentKey];
             }
         } else if (isUlnarDeviation) {
-            const absCurrentAngle = Math.abs(currentAngle);
-            const absNextAngle = nextAngle !== null ? Math.abs(nextAngle) : null;
-
-            if (absAngle === absCurrentAngle || (absNextAngle !== null && absAngle > absCurrentAngle && absAngle <= absNextAngle)) {
+            if (absAngle === Math.abs(currentAngle) || (nextAngle !== null && absAngle > Math.abs(currentAngle) && absAngle <= Math.abs(nextAngle))) {
                 console.log(`Match found: ${dataArray[i][impairmentKey]}`);
                 return dataArray[i][impairmentKey];
             }
