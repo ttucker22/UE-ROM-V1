@@ -1581,8 +1581,14 @@ function updateTotalImpairment(joint) {
     const wpiExact = totalImp * 0.6;
     const wpi = wpiExact % 1 >= 0.5 ? Math.ceil(wpiExact) : Math.floor(wpiExact);
     
-    const breakdownString = impairments.filter(imp => imp > 0).join(' + ');
-    const totalString = breakdownString ? `${breakdownString} = ${totalImp}` : totalImp.toString();
+    const nonZeroImpairments = impairments.filter(imp => imp > 0);
+    let totalString;
+    
+    if (nonZeroImpairments.length <= 1) {
+        totalString = `${totalImp}`;
+    } else {
+        totalString = `${nonZeroImpairments.join(' + ')} = ${totalImp}`;
+    }
     
     const totalImpElement = document.getElementById(`${joint}-total-imp`);
     if (totalImpElement) {
