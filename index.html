@@ -250,20 +250,15 @@
     <button id="clearAllButton" class="clear-button">Clear All</button>
 
     <script>
-        function clearAll() {
-            const inputs = document.querySelectorAll('input[type="number"]');
-            inputs.forEach(input => input.value = '');
-
-            const impDisplays = document.querySelectorAll('[id$="-imp"]');
-            impDisplays.forEach(display => display.textContent = '0');
-
-            const totalImps = document.querySelectorAll('[id$="-total-imp"]');
-            totalImps.forEach(total => total.textContent = '0 UE = 0 WPI');
-        }
-
-        document.getElementById('clearAllButton').addEventListener('click', clearAll);
-
-        // Additional JavaScript for calculations will be added here
-        <script src="ue-calculator-script.js"></script>
-    </body>
+    // Define your data arrays here
+    const WRISTFlexionExtensionData = [ /* ... */ ];
+    const WRISTRadialUlnarDeviationData = [ /* ... */ ];
+    const ELBOWFlexionExtensionData = [ /* ... */ ];
+    const ELBOWPronationSupinationData = [ /* ... */ ];
+    const SHOULDERFlexionExtensionData = [ /* ... */ ];
+    const SHOULDERAbductionAdductionData = [ /* ... */ ];
+    const SHOULDERInternalExternalRotationData = [ /* ... */ ];
+    </script>
+    <script src="ue-calculator-script.js"></script>
+</body>
 </html>
