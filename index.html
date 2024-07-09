@@ -1558,33 +1558,28 @@ function calculateImpairment(angle, dataArray, angleKey, impairmentKey) {
         return 0;
     }
 
-    // Handle radial and ulnar deviation
-    const isRadialDeviation = angleKey === 'radialDeviation';
     const isUlnarDeviation = angleKey === 'ulnarDeviation';
+    const absAngle = Math.abs(angle);
 
     for (let i = 0; i < dataArray.length; i++) {
         const currentAngle = dataArray[i][angleKey];
         const nextAngle = i < dataArray.length - 1 ? dataArray[i + 1][angleKey] : null;
 
-        console.log(`Checking: currentAngle = ${currentAngle}, nextAngle = ${nextAngle}, angle = ${angle}`);
+        console.log(`Checking: currentAngle = ${currentAngle}, nextAngle = ${nextAngle}, absAngle = ${absAngle}`);
 
         if (typeof currentAngle === 'string') {
-            if (currentAngle.startsWith('>') && angle > parseFloat(currentAngle.substring(1))) {
+            if (currentAngle.startsWith('>') && absAngle > parseFloat(currentAngle.substring(1))) {
                 return dataArray[i][impairmentKey];
             }
-            if (currentAngle.startsWith('<') && angle < parseFloat(currentAngle.substring(1))) {
-                return dataArray[i][impairmentKey];
-            }
-        } else if (isRadialDeviation) {
-            if (angle === currentAngle || (nextAngle !== null && angle > currentAngle && angle <= nextAngle)) {
+            if (currentAngle.startsWith('<') && absAngle < parseFloat(currentAngle.substring(1))) {
                 return dataArray[i][impairmentKey];
             }
         } else if (isUlnarDeviation) {
-            const absAngle = Math.abs(angle);
             const absCurrentAngle = Math.abs(currentAngle);
             const absNextAngle = nextAngle !== null ? Math.abs(nextAngle) : null;
             
             if (absAngle === absCurrentAngle || (absNextAngle !== null && absAngle > absCurrentAngle && absAngle <= absNextAngle)) {
+                console.log(`Match found: ${dataArray[i][impairmentKey]}`);
                 return dataArray[i][impairmentKey];
             }
         } else {
