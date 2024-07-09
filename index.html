@@ -1500,7 +1500,7 @@ function calculateMovementImpairment(joint, movement, dataArray) {
         const inputId = `${joint}-${mov}-angle`;
         const inputElement = document.getElementById(inputId);
         
-        if (inputElement) {
+        if (inputElement && inputElement.value !== "") {
             const angle = parseFloat(inputElement.value);
 
             let angleKey = mov;
@@ -1527,7 +1527,7 @@ function calculateMovementImpairment(joint, movement, dataArray) {
     // Calculate ankylosis impairment
     const ankylosisInputId = `${joint}-${movement}-ankylosis-angle`;
     const ankylosisInputElement = document.getElementById(ankylosisInputId);
-    if (ankylosisInputElement) {
+    if (ankylosisInputElement && ankylosisInputElement.value !== "") {
         const ankylosisAngle = parseFloat(ankylosisInputElement.value);
         ankylosisImp = calculateImpairment(ankylosisAngle, dataArray, 'ankylosis', 'ueAnkylosis');
         console.log(`Ankylosis angle: ${ankylosisAngle}, impairment: ${ankylosisImp}`);
@@ -1558,16 +1558,16 @@ function calculateImpairment(angle, dataArray, angleKey, impairmentKey) {
         return 0;
     }
 
-    // For ulnar deviation, we need to find the closest matching negative angle
+    // For ulnar deviation, we need to find the matching positive angle in the data
     const isUlnarDeviation = angleKey === 'ulnarDeviation';
-    const adjustedAngle = isUlnarDeviation ? -Math.abs(angle) : angle;
-
-    let closestMatch = null;
-    let smallestDifference = Infinity;
+    const adjustedAngle = isUlnarDeviation ? Math.abs(angle) : angle;
 
     for (let i = 0; i < dataArray.length; i++) {
         const currentAngle = dataArray[i][angleKey];
-        
+        const nextAngle = i < dataArray.length - 1 ? dataArray[i + 1][angleKey] : null;
+
+        console.log(`Checking: currentAngle = ${currentAngle}, nextAngle = ${nextAngle}, adjustedAngle = ${adjustedAngle}`);
+
         if (typeof currentAngle === 'string') {
             if (currentAngle.startsWith('>') && adjustedAngle > parseFloat(currentAngle.substring(1))) {
                 return dataArray[i][impairmentKey];
@@ -1575,18 +1575,13 @@ function calculateImpairment(angle, dataArray, angleKey, impairmentKey) {
             if (currentAngle.startsWith('<') && adjustedAngle < parseFloat(currentAngle.substring(1))) {
                 return dataArray[i][impairmentKey];
             }
-        } else {
-            const difference = Math.abs(adjustedAngle - currentAngle);
-            if (difference < smallestDifference) {
-                smallestDifference = difference;
-                closestMatch = dataArray[i];
+        } else if (adjustedAngle === Math.abs(currentAngle)) {
+            return dataArray[i][impairmentKey];
+        } else if (nextAngle !== null) {
+            if (adjustedAngle > Math.abs(currentAngle) && adjustedAngle <= Math.abs(nextAngle)) {
+                return dataArray[i][impairmentKey];
             }
         }
-    }
-
-    if (closestMatch) {
-        console.log(`Closest match found: ${JSON.stringify(closestMatch)}`);
-        return closestMatch[impairmentKey];
     }
 
     console.log('No match found, returning 0');
