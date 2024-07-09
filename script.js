@@ -1158,52 +1158,83 @@ const SHOULDERInternalExternalRotationData = [
 ];
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Wrist Flexion & Extension
-    setupInputHandlers('wrist-flexion-angle', 'wrist-flexion-imp', WRISTFlexionExtensionData, 'flexion', 'ueFlexion');
-    setupInputHandlers('wrist-extension-angle', 'wrist-extension-imp', WRISTFlexionExtensionData, 'extension', 'ueExtension');
-    setupInputHandlers('wrist-flexext-ankylosis-angle', 'wrist-flexext-ankylosis-imp', WRISTFlexionExtensionData, 'ankylosis', 'ueAnkylosis');
+    // Set up input handlers for all joints
+    setupJointHandlers('wrist');
+    setupJointHandlers('elbow');
+    setupJointHandlers('shoulder');
 
-    // Wrist Radial & Ulnar Deviation
-    setupInputHandlers('wrist-rd-angle', 'wrist-rd-imp', WRISTRadialUlnarDeviationData, 'radialDeviation', 'ueRadialDeviation');
-    setupInputHandlers('wrist-ud-angle', 'wrist-ud-imp', WRISTRadialUlnarDeviationData, 'ulnarDeviation', 'ueUlnarDeviation');
-    setupInputHandlers('wrist-rdud-ankylosis-angle', 'wrist-rdud-ankylosis-imp', WRISTRadialUlnarDeviationData, 'ankylosis', 'ueAnkylosis');
-
-    // Elbow Flexion & Extension
-    setupInputHandlers('elbow-flexion-angle', 'elbow-flexion-imp', ELBOWFlexionExtensionData, 'flexion', 'ueFlexion');
-    setupInputHandlers('elbow-extension-angle', 'elbow-extension-imp', ELBOWFlexionExtensionData, 'extension', 'ueExtension');
-    setupInputHandlers('elbow-flexext-ankylosis-angle', 'elbow-flexext-ankylosis-imp', ELBOWFlexionExtensionData, 'ankylosis', 'ueAnkylosis');
-
-    // Elbow Pronation & Supination
-    setupInputHandlers('elbow-pronation-angle', 'elbow-pronation-imp', ELBOWPronationSupinationData, 'pronation', 'uePronation');
-    setupInputHandlers('elbow-supination-angle', 'elbow-supination-imp', ELBOWPronationSupinationData, 'supination', 'ueSupination');
-    setupInputHandlers('elbow-prosup-ankylosis-angle', 'elbow-prosup-ankylosis-imp', ELBOWPronationSupinationData, 'ankylosis', 'ueAnkylosis');
-
-    // Shoulder Flexion & Extension
-    setupInputHandlers('shoulder-flexion-angle', 'shoulder-flexion-imp', SHOULDERFlexionExtensionData, 'flexion', 'ueFlexion');
-    setupInputHandlers('shoulder-extension-angle', 'shoulder-extension-imp', SHOULDERFlexionExtensionData, 'extension', 'ueExtension');
-    setupInputHandlers('shoulder-flexext-ankylosis-angle', 'shoulder-flexext-ankylosis-imp', SHOULDERFlexionExtensionData, 'ankylosis', 'ueAnkylosis');
-
-    // Shoulder Abduction & Adduction
-    setupInputHandlers('shoulder-abduction-angle', 'shoulder-abduction-imp', SHOULDERAbductionAdductionData, 'abduction', 'ueAbduction');
-    setupInputHandlers('shoulder-adduction-angle', 'shoulder-adduction-imp', SHOULDERAbductionAdductionData, 'adduction', 'ueAdduction');
-    setupInputHandlers('shoulder-abdadd-ankylosis-angle', 'shoulder-abdadd-ankylosis-imp', SHOULDERAbductionAdductionData, 'ankylosis', 'ueAnkylosis');
-
-    // Shoulder Internal & External Rotation
-    setupInputHandlers('shoulder-introt-angle', 'shoulder-introt-imp', SHOULDERInternalExternalRotationData, 'internalRotation', 'ueInternalRotation');
-    setupInputHandlers('shoulder-extrot-angle', 'shoulder-extrot-imp', SHOULDERInternalExternalRotationData, 'externalRotation', 'ueExternalRotation');
-    setupInputHandlers('shoulder-rotation-ankylosis-angle', 'shoulder-rotation-ankylosis-imp', SHOULDERInternalExternalRotationData, 'ankylosis', 'ueAnkylosis');
+    // Set up Clear All button
+    document.getElementById('clearAllButton').addEventListener('click', clearAll);
 });
 
-function setupInputHandlers(inputId, outputId, dataArray, angleKey, impairmentKey) {
-    const input = document.getElementById(inputId);
-    const output = document.getElementById(outputId);
+function setupJointHandlers(joint) {
+    const movements = {
+        'wrist': ['flexion', 'extension', 'rd', 'ud'],
+        'elbow': ['flexion', 'extension', 'pronation', 'supination'],
+        'shoulder': ['flexion', 'extension', 'abduction', 'adduction', 'introt', 'extrot']
+    };
 
-    input.addEventListener('input', function() {
-        const angle = parseFloat(this.value);
-        const impairment = calculateImpairment(angle, dataArray, angleKey, impairmentKey);
-        output.textContent = impairment;
-        updateTotalImpairment(this.id.split('-')[0]);  // 'wrist', 'elbow', or 'shoulder'
+    movements[joint].forEach(movement => {
+        const input = document.getElementById(`${joint}-${movement}-angle`);
+        if (input) {
+            input.addEventListener('input', function() {
+                calculateJointImpairment(joint);
+            });
+        }
     });
+
+    // Set up ankylosis handlers
+    const ankylosisInputs = document.querySelectorAll(`#${joint} input[id$="-ankylosis-angle"]`);
+    ankylosisInputs.forEach(input => {
+        input.addEventListener('input', function() {
+            calculateJointImpairment(joint);
+        });
+    });
+}
+
+function calculateJointImpairment(joint) {
+    let totalImp = 0;
+
+    if (joint === 'wrist') {
+        totalImp += calculateMovementImpairment('wrist', 'flexext', WRISTFlexionExtensionData);
+        totalImp += calculateMovementImpairment('wrist', 'rdud', WRISTRadialUlnarDeviationData);
+    } else if (joint === 'elbow') {
+        totalImp += calculateMovementImpairment('elbow', 'flexext', ELBOWFlexionExtensionData);
+        totalImp += calculateMovementImpairment('elbow', 'prosup', ELBOWPronationSupinationData);
+    } else if (joint === 'shoulder') {
+        totalImp += calculateMovementImpairment('shoulder', 'flexext', SHOULDERFlexionExtensionData);
+        totalImp += calculateMovementImpairment('shoulder', 'abdadd', SHOULDERAbductionAdductionData);
+        totalImp += calculateMovementImpairment('shoulder', 'rotation', SHOULDERInternalExternalRotationData);
+    }
+
+    const wpi = (totalImp * 0.6).toFixed(1);
+    document.getElementById(`${joint}-total-imp`).textContent = `${totalImp} UE = ${wpi} WPI`;
+}
+
+function calculateMovementImpairment(joint, movement, dataArray) {
+    const movements = movement === 'flexext' ? ['flexion', 'extension'] :
+                      movement === 'rdud' ? ['rd', 'ud'] :
+                      movement === 'prosup' ? ['pronation', 'supination'] :
+                      movement === 'abdadd' ? ['abduction', 'adduction'] :
+                      movement === 'rotation' ? ['introt', 'extrot'] : [];
+
+    let maxImp = 0;
+
+    movements.forEach(mov => {
+        const angle = parseFloat(document.getElementById(`${joint}-${mov}-angle`).value);
+        const imp = calculateImpairment(angle, dataArray, mov, `ue${mov.charAt(0).toUpperCase() + mov.slice(1)}`);
+        document.getElementById(`${joint}-${mov}-imp`).textContent = imp;
+        maxImp = Math.max(maxImp, imp);
+    });
+
+    const ankylosisAngle = parseFloat(document.getElementById(`${joint}-${movement}-ankylosis-angle`).value);
+    const ankylosisImp = calculateImpairment(ankylosisAngle, dataArray, 'ankylosis', 'ueAnkylosis');
+    document.getElementById(`${joint}-${movement}-ankylosis-imp`).textContent = ankylosisImp;
+
+    const totalImp = Math.max(maxImp, ankylosisImp);
+    document.getElementById(`${joint}-${movement}-imp`).textContent = totalImp;
+
+    return totalImp;
 }
 
 function calculateImpairment(angle, dataArray, angleKey, impairmentKey) {
@@ -1226,43 +1257,10 @@ function calculateImpairment(angle, dataArray, angleKey, impairmentKey) {
     return 0;
 }
 
-function updateTotalImpairment(joint) {
-    let totalImp = 0;
-
-    if (joint === 'wrist') {
-        const flexExtImp = parseFloat(document.getElementById(`${joint}-flexext-imp`).textContent) || 0;
-        const rdudImp = parseFloat(document.getElementById(`${joint}-rdud-imp`).textContent) || 0;
-        totalImp = flexExtImp + rdudImp;
-    } else if (joint === 'elbow') {
-        const flexExtImp = parseFloat(document.getElementById(`${joint}-flexext-imp`).textContent) || 0;
-        const proSupImp = parseFloat(document.getElementById(`${joint}-prosup-imp`).textContent) || 0;
-        totalImp = flexExtImp + proSupImp;
-    } else if (joint === 'shoulder') {
-        const flexExtImp = parseFloat(document.getElementById(`${joint}-flexext-imp`).textContent) || 0;
-        const abdAddImp = parseFloat(document.getElementById(`${joint}-abdadd-imp`).textContent) || 0;
-        const rotationImp = parseFloat(document.getElementById(`${joint}-rotation-imp`).textContent) || 0;
-        totalImp = flexExtImp + abdAddImp + rotationImp;
-    }
-
-    const wpi = (totalImp * 0.6).toFixed(1);
-    document.getElementById(`${joint}-total-imp`).textContent = `${totalImp} UE = ${wpi} WPI`;
-}
-
-// Add event listener to the "Clear All" button
-document.getElementById('clearAllButton').addEventListener('click', function() {
-    clearAll();
-    updateTotalImpairment('wrist');
-    updateTotalImpairment('elbow');
-    updateTotalImpairment('shoulder');
-});
-
 function clearAll() {
     const inputs = document.querySelectorAll('input[type="number"]');
-    inputs.forEach(input => input.value = '');
-
-    const impDisplays = document.querySelectorAll('[id$="-imp"]');
-    impDisplays.forEach(display => display.textContent = '0');
-
-    const totalImps = document.querySelectorAll('[id$="-total-imp"]');
-    totalImps.forEach(total => total.textContent = '0 UE = 0 WPI');
+    inputs.forEach(input => {
+        input.value = '';
+        input.dispatchEvent(new Event('input'));
+    });
 }
