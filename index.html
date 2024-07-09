@@ -1486,7 +1486,6 @@ function calculateJointImpairment(joint) {
 
 function calculateMovementImpairment(joint, movement, dataArray) {
     console.log(`Calculating ${movement} impairment for ${joint}`);
-    console.log('Data Array:', dataArray);
 
     const movements = movement === 'flexext' ? ['flexion', 'extension'] :
                       movement === 'rdud' ? ['rd', 'ud'] :
@@ -1494,86 +1493,60 @@ function calculateMovementImpairment(joint, movement, dataArray) {
                       movement === 'abdadd' ? ['abduction', 'adduction'] :
                       movement === 'rotation' ? ['introt', 'extrot'] : [];
 
-    console.log('Movements:', movements);
-
-    let maxImp = 0;
+    let sumImp = 0;
+    let ankylosisImp = 0;
 
     movements.forEach(mov => {
         const inputId = `${joint}-${mov}-angle`;
         const inputElement = document.getElementById(inputId);
-        console.log(`Looking for input element with id: ${inputId}`);
         
         if (inputElement) {
             const angle = parseFloat(inputElement.value);
-            console.log(`Angle for ${mov}: ${angle}`);
 
             let angleKey = mov;
             let impairmentKey = `ue${mov.charAt(0).toUpperCase() + mov.slice(1)}`;
             
             // Special handling for rd, ud, introt, and extrot
-            if (mov === 'rd') {
-                angleKey = 'radialDeviation';
-                impairmentKey = 'ueRadialDeviation';
-            }
-            if (mov === 'ud') {
-                angleKey = 'ulnarDeviation';
-                impairmentKey = 'ueUlnarDeviation';
-            }
-            if (mov === 'introt') {
-                angleKey = 'internalRotation';
-                impairmentKey = 'ueInternalRotation';
-            }
-            if (mov === 'extrot') {
-                angleKey = 'externalRotation';
-                impairmentKey = 'ueExternalRotation';
-            }
-
-            console.log(`Angle key: ${angleKey}, Impairment key: ${impairmentKey}`);
+            if (mov === 'rd') { angleKey = 'radialDeviation'; impairmentKey = 'ueRadialDeviation'; }
+            if (mov === 'ud') { angleKey = 'ulnarDeviation'; impairmentKey = 'ueUlnarDeviation'; }
+            if (mov === 'introt') { angleKey = 'internalRotation'; impairmentKey = 'ueInternalRotation'; }
+            if (mov === 'extrot') { angleKey = 'externalRotation'; impairmentKey = 'ueExternalRotation'; }
 
             const imp = calculateImpairment(angle, dataArray, angleKey, impairmentKey);
-            console.log(`Calculated impairment for ${mov}: ${imp}`);
+            sumImp += imp;
 
             const impElementId = `${joint}-${mov}-imp`;
             const impElement = document.getElementById(impElementId);
-            console.log(`Looking for impairment element with id: ${impElementId}`);
-
             if (impElement) {
                 impElement.textContent = imp;
-                console.log(`Updated impairment element for ${mov}`);
-            } else {
-                console.error(`Impairment element not found for ${impElementId}`);
             }
-            maxImp = Math.max(maxImp, imp);
-        } else {
-            console.error(`Input element not found for ${inputId}`);
         }
     });
 
-    const ankylosisInputElement = document.getElementById(`${joint}-${movement}-ankylosis-angle`);
+    // Calculate ankylosis impairment
+    const ankylosisInputId = `${joint}-${movement}-ankylosis-angle`;
+    const ankylosisInputElement = document.getElementById(ankylosisInputId);
     if (ankylosisInputElement) {
         const ankylosisAngle = parseFloat(ankylosisInputElement.value);
-        const ankylosisImp = calculateImpairment(ankylosisAngle, dataArray, 'ankylosis', 'ueAnkylosis');
-        const ankylosisImpElement = document.getElementById(`${joint}-${movement}-ankylosis-imp`);
+        ankylosisImp = calculateImpairment(ankylosisAngle, dataArray, 'ankylosis', 'ueAnkylosis');
+
+        const ankylosisImpElementId = `${joint}-${movement}-ankylosis-imp`;
+        const ankylosisImpElement = document.getElementById(ankylosisImpElementId);
         if (ankylosisImpElement) {
             ankylosisImpElement.textContent = ankylosisImp;
-            console.log(`${joint} ${movement} ankylosis impairment: ${ankylosisImp}`);
-        } else {
-            console.error(`Ankylosis impairment element not found for ${joint}-${movement}`);
         }
-        maxImp = Math.max(maxImp, ankylosisImp);
-    } else {
-        console.error(`Ankylosis input element not found for ${joint}-${movement}`);
     }
+
+    // Compare sum of individual impairments with ankylosis impairment
+    const totalImp = Math.max(sumImp, ankylosisImp);
 
     const totalImpElement = document.getElementById(`${joint}-${movement}-imp`);
     if (totalImpElement) {
-        totalImpElement.textContent = maxImp;
-        console.log(`${joint} ${movement} total impairment: ${maxImp}`);
-    } else {
-        console.error(`Total impairment element not found for ${joint}-${movement}`);
+        totalImpElement.textContent = totalImp;
     }
 
-    return maxImp;
+    console.log(`${joint} ${movement} total impairment: ${totalImp} (Sum: ${sumImp}, Ankylosis: ${ankylosisImp})`);
+    return totalImp;
 }
 
 function calculateImpairment(angle, dataArray, angleKey, impairmentKey) {
