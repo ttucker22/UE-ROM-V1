@@ -1469,13 +1469,16 @@ function calculateJointImpairment(joint) {
     if (joint === 'wrist') {
         totalImp += calculateMovementImpairment('wrist', 'flexext', WRISTFlexionExtensionData);
         totalImp += calculateMovementImpairment('wrist', 'rdud', WRISTRadialUlnarDeviationData);
+        console.log('Wrist total impairment:', totalImp);
     } else if (joint === 'elbow') {
         totalImp += calculateMovementImpairment('elbow', 'flexext', ELBOWFlexionExtensionData);
         totalImp += calculateMovementImpairment('elbow', 'prosup', ELBOWPronationSupinationData);
+        console.log('Elbow total impairment:', totalImp);
     } else if (joint === 'shoulder') {
         totalImp += calculateMovementImpairment('shoulder', 'flexext', SHOULDERFlexionExtensionData);
         totalImp += calculateMovementImpairment('shoulder', 'abdadd', SHOULDERAbductionAdductionData);
         totalImp += calculateMovementImpairment('shoulder', 'rotation', SHOULDERInternalExternalRotationData);
+        console.log('Shoulder total impairment:', totalImp);
     }
 
     updateTotalImpairment(joint);
@@ -1483,18 +1486,27 @@ function calculateJointImpairment(joint) {
 
 function calculateMovementImpairment(joint, movement, dataArray) {
     console.log(`Calculating ${movement} impairment for ${joint}`);
+    console.log('Data Array:', dataArray); // Log the entire data array
+
     const movements = movement === 'flexext' ? ['flexion', 'extension'] :
                       movement === 'rdud' ? ['rd', 'ud'] :
                       movement === 'prosup' ? ['pronation', 'supination'] :
                       movement === 'abdadd' ? ['abduction', 'adduction'] :
                       movement === 'rotation' ? ['introt', 'extrot'] : [];
 
+    console.log('Movements:', movements); // Log the movements being processed
+
     let maxImp = 0;
 
     movements.forEach(mov => {
-        const inputElement = document.getElementById(`${joint}-${mov}-angle`);
+        const inputId = `${joint}-${mov}-angle`;
+        const inputElement = document.getElementById(inputId);
+        console.log(`Looking for input element with id: ${inputId}`);
+        
         if (inputElement) {
             const angle = parseFloat(inputElement.value);
+            console.log(`Angle for ${mov}: ${angle}`);
+
             let impairmentKey = `ue${mov.charAt(0).toUpperCase() + mov.slice(1)}`;
             
             // Special handling for rd, ud, introt, and extrot
@@ -1503,17 +1515,24 @@ function calculateMovementImpairment(joint, movement, dataArray) {
             if (mov === 'introt') impairmentKey = 'ueInternalRotation';
             if (mov === 'extrot') impairmentKey = 'ueExternalRotation';
 
+            console.log(`Impairment key: ${impairmentKey}`);
+
             const imp = calculateImpairment(angle, dataArray, mov, impairmentKey);
-            const impElement = document.getElementById(`${joint}-${mov}-imp`);
+            console.log(`Calculated impairment for ${mov}: ${imp}`);
+
+            const impElementId = `${joint}-${mov}-imp`;
+            const impElement = document.getElementById(impElementId);
+            console.log(`Looking for impairment element with id: ${impElementId}`);
+
             if (impElement) {
                 impElement.textContent = imp;
-                console.log(`${joint} ${mov} impairment: ${imp}`);
+                console.log(`Updated impairment element for ${mov}`);
             } else {
-                console.error(`Impairment element not found for ${joint}-${mov}`);
+                console.error(`Impairment element not found for ${impElementId}`);
             }
             maxImp = Math.max(maxImp, imp);
         } else {
-            console.error(`Input element not found for ${joint}-${mov}-angle`);
+            console.error(`Input element not found for ${inputId}`);
         }
     });
 
