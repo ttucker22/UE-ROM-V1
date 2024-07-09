@@ -65,7 +65,7 @@
         }
         .clear-button {
             display: block;
-            width: 200px;
+            width: 120px;
             margin: 20px auto;
             padding: 10px;
             background-color: #007bff;
@@ -76,7 +76,6 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
-
         .clear-button:hover {
             background-color: #0056b3;
         }
@@ -85,7 +84,6 @@
 <body>
     <h1>UE ROM Impairment Calculator</h1>
     
-    <!-- Wrist Card -->
     <div class="card" id="wrist">
         <h2>Wrist</h2>
         <table>
@@ -101,13 +99,13 @@
                 <td><input type="number" id="wrist-flexion-angle"></td>
                 <td><input type="number" id="wrist-extension-angle"></td>
                 <td><input type="number" id="wrist-flexext-ankylosis-angle"></td>
-                <td rowspan="2" id="wrist-flexext-imp"></td>
+                <td rowspan="2" id="wrist-flexext-imp">0</td>
             </tr>
             <tr>
                 <td>Imp%</td>
-                <td id="wrist-flexion-imp"></td>
-                <td id="wrist-extension-imp"></td>
-                <td id="wrist-flexext-ankylosis-imp"></td>
+                <td id="wrist-flexion-imp">0</td>
+                <td id="wrist-extension-imp">0</td>
+                <td id="wrist-flexext-ankylosis-imp">0</td>
             </tr>
             <tr>
                 <th></th>
@@ -121,19 +119,18 @@
                 <td><input type="number" id="wrist-rd-angle"></td>
                 <td><input type="number" id="wrist-ud-angle"></td>
                 <td><input type="number" id="wrist-rdud-ankylosis-angle"></td>
-                <td rowspan="2" id="wrist-rdud-imp"></td>
+                <td rowspan="2" id="wrist-rdud-imp">0</td>
             </tr>
             <tr>
                 <td>Imp%</td>
-                <td id="wrist-rd-imp"></td>
-                <td id="wrist-ud-imp"></td>
-                <td id="wrist-rdud-ankylosis-imp"></td>
+                <td id="wrist-rd-imp">0</td>
+                <td id="wrist-ud-imp">0</td>
+                <td id="wrist-rdud-ankylosis-imp">0</td>
             </tr>
         </table>
-        <p class="total">Total Wrist Impairment: <span id="wrist-total-imp"></span>%</p>
+        <p class="total">Total Wrist Impairment: <span id="wrist-total-imp">0</span>%</p>
     </div>
 
-    <!-- Elbow Card -->
     <div class="card" id="elbow">
         <h2>Elbow</h2>
         <table>
@@ -149,13 +146,13 @@
                 <td><input type="number" id="elbow-flexion-angle"></td>
                 <td><input type="number" id="elbow-extension-angle"></td>
                 <td><input type="number" id="elbow-flexext-ankylosis-angle"></td>
-                <td rowspan="2" id="elbow-flexext-imp"></td>
+                <td rowspan="2" id="elbow-flexext-imp">0</td>
             </tr>
             <tr>
                 <td>Imp%</td>
-                <td id="elbow-flexion-imp"></td>
-                <td id="elbow-extension-imp"></td>
-                <td id="elbow-flexext-ankylosis-imp"></td>
+                <td id="elbow-flexion-imp">0</td>
+                <td id="elbow-extension-imp">0</td>
+                <td id="elbow-flexext-ankylosis-imp">0</td>
             </tr>
             <tr>
                 <th></th>
@@ -169,19 +166,18 @@
                 <td><input type="number" id="elbow-pronation-angle"></td>
                 <td><input type="number" id="elbow-supination-angle"></td>
                 <td><input type="number" id="elbow-prosup-ankylosis-angle"></td>
-                <td rowspan="2" id="elbow-prosup-imp"></td>
+                <td rowspan="2" id="elbow-prosup-imp">0</td>
             </tr>
             <tr>
                 <td>Imp%</td>
-                <td id="elbow-pronation-imp"></td>
-                <td id="elbow-supination-imp"></td>
-                <td id="elbow-prosup-ankylosis-imp"></td>
+                <td id="elbow-pronation-imp">0</td>
+                <td id="elbow-supination-imp">0</td>
+                <td id="elbow-prosup-ankylosis-imp">0</td>
             </tr>
         </table>
-        <p class="total">Total Elbow Impairment: <span id="elbow-total-imp"></span>%</p>
+        <p class="total">Total Elbow Impairment: <span id="elbow-total-imp">0</span>%</p>
     </div>
 
-    <!-- Shoulder Card -->
     <div class="card" id="shoulder">
         <h2>Shoulder</h2>
         <table>
@@ -197,13 +193,13 @@
                 <td><input type="number" id="shoulder-flexion-angle"></td>
                 <td><input type="number" id="shoulder-extension-angle"></td>
                 <td><input type="number" id="shoulder-flexext-ankylosis-angle"></td>
-                <td rowspan="2" id="shoulder-flexext-imp"></td>
+                <td rowspan="2" id="shoulder-flexext-imp">0</td>
             </tr>
             <tr>
                 <td>Imp%</td>
-                <td id="shoulder-flexion-imp"></td>
-                <td id="shoulder-extension-imp"></td>
-                <td id="shoulder-flexext-ankylosis-imp"></td>
+                <td id="shoulder-flexion-imp">0</td>
+                <td id="shoulder-extension-imp">0</td>
+                <td id="shoulder-flexext-ankylosis-imp">0</td>
             </tr>
             <tr>
                 <th></th>
@@ -217,13 +213,13 @@
                 <td><input type="number" id="shoulder-abduction-angle"></td>
                 <td><input type="number" id="shoulder-adduction-angle"></td>
                 <td><input type="number" id="shoulder-abdadd-ankylosis-angle"></td>
-                <td rowspan="2" id="shoulder-abdadd-imp"></td>
+                <td rowspan="2" id="shoulder-abdadd-imp">0</td>
             </tr>
             <tr>
                 <td>Imp%</td>
-                <td id="shoulder-abduction-imp"></td>
-                <td id="shoulder-adduction-imp"></td>
-                <td id="shoulder-abdadd-ankylosis-imp"></td>
+                <td id="shoulder-abduction-imp">0</td>
+                <td id="shoulder-adduction-imp">0</td>
+                <td id="shoulder-abdadd-ankylosis-imp">0</td>
             </tr>
             <tr>
                 <th></th>
@@ -237,38 +233,32 @@
                 <td><input type="number" id="shoulder-introt-angle"></td>
                 <td><input type="number" id="shoulder-extrot-angle"></td>
                 <td><input type="number" id="shoulder-rotation-ankylosis-angle"></td>
-                <td rowspan="2" id="shoulder-rotation-imp"></td>
+                <td rowspan="2" id="shoulder-rotation-imp">0</td>
             </tr>
             <tr>
                 <td>Imp%</td>
-                <td id="shoulder-introt-imp"></td>
-                <td id="shoulder-extrot-imp"></td>
-                <td id="shoulder-rotation-ankylosis-imp"></td>
+                <td id="shoulder-introt-imp">0</td>
+                <td id="shoulder-extrot-imp">0</td>
+                <td id="shoulder-rotation-ankylosis-imp">0</td>
             </tr>
         </table>
-        <p class="total">Total Shoulder Impairment: <span id="shoulder-total-imp"></span>%</p>
+        <p class="total">Total Shoulder Impairment: <span id="shoulder-total-imp">0</span>%</p>
     </div>
-    
-    <!-- Clear All Button -->
+
     <button id="clearAllButton" class="clear-button">Clear All</button>
 
     <script>
-        // Function to clear all inputs and results
         function clearAll() {
-            // Clear all input fields
             const inputs = document.querySelectorAll('input[type="number"]');
             inputs.forEach(input => input.value = '');
 
-            // Clear all impairment percentage displays
             const impDisplays = document.querySelectorAll('[id$="-imp"]');
-            impDisplays.forEach(display => display.textContent = '');
+            impDisplays.forEach(display => display.textContent = '0');
 
-            // Clear total impairment displays
             const totalImps = document.querySelectorAll('[id$="-total-imp"]');
-            totalImps.forEach(total => total.textContent = '');
+            totalImps.forEach(total => total.textContent = '0');
         }
 
-        // Add event listener to the Clear All button
         document.getElementById('clearAllButton').addEventListener('click', clearAll);
 
         // Additional JavaScript for calculations will be added here
