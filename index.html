@@ -129,7 +129,7 @@
                 <td id="wrist-rdud-ankylosis-imp">0</td>
             </tr>
         </table>
-        <p class="total">Total Wrist: <span id="wrist-total-imp">0 UE = 0 WPI</span></p>
+        <p class="total">Total: <span id="wrist-total-imp">0 UE = 0 WPI</span></p>
     </div>
 
     <div class="card" id="elbow">
@@ -176,7 +176,7 @@
                 <td id="elbow-prosup-ankylosis-imp">0</td>
             </tr>
         </table>
-        <p class="total">Total Elbow: <span id="elbow-total-imp">0 UE = 0 WPI</span></p>
+        <p class="total">Total: <span id="elbow-total-imp">0 UE = 0 WPI</span></p>
     </div>
 
     <div class="card" id="shoulder">
@@ -243,7 +243,7 @@
                 <td id="shoulder-rotation-ankylosis-imp">0</td>
             </tr>
         </table>
-        <p class="total">Total Shoulder: <span id="shoulder-total-imp">0 UE = 0 WPI</span></p>
+        <p class="total">Total: <span id="shoulder-total-imp">0 UE = 0 WPI</span></p>
     </div>
 
     <button id="clearAllButton" class="clear-button">Clear All</button>
@@ -256,9 +256,8 @@
             const impDisplays = document.querySelectorAll('[id$="-imp"]');
             impDisplays.forEach(display => display.textContent = '0');
 
-            document.getElementById('wrist-total-imp').textContent = '0 UE = 0 WPI';
-            document.getElementById('elbow-total-imp').textContent = '0 UE = 0 WPI';
-            document.getElementById('shoulder-total-imp').textContent = '0 UE = 0 WPI';
+            const totalImps = document.querySelectorAll('[id$="-total-imp"]');
+            totalImps.forEach(total => total.textContent = '0 UE = 0 WPI');
         }
 
         document.getElementById('clearAllButton').addEventListener('click', clearAll);
