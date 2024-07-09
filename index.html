@@ -1586,13 +1586,13 @@ function updateTotalImpairment(joint) {
     
     const totalImpElement = document.getElementById(`${joint}-total-imp`);
     if (totalImpElement) {
-        totalImpElement.textContent = `Total: ${totalString} UE = ${wpi} WPI`;
+        totalImpElement.textContent = `${totalString} UE = ${wpi} WPI`;
         console.log(`Updated total impairment for ${joint}: ${totalString} UE = ${wpi} WPI`);
     } else {
         console.error(`Total impairment element not found for ${joint}`);
     }
 }
-
+        
 function clearAll() {
     console.log("Clear All function called");
     const inputs = document.querySelectorAll('input[type="number"]');
