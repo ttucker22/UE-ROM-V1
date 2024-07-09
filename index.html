@@ -10,6 +10,7 @@
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
+            background-color: #f0f0f0; /* Light grey background */
         }
         h1 {
             text-align: center;
@@ -19,6 +20,7 @@
             border-radius: 5px;
             padding: 15px;
             margin-bottom: 20px;
+            background-color: white; /* White background for cards */
         }
         .card h2 {
             margin-top: 0;
@@ -32,6 +34,11 @@
             padding: 8px;
             text-align: left;
         }
+        th {
+            background-color: #007bff; /* Blue background for header rows */
+            color: white; /* White text for header rows */
+            font-weight: bold;
+        }
         input[type="number"] {
             width: 60px;
         }
@@ -43,14 +50,15 @@
 <body>
     <h1>UE ROM Impairment Calculator</h1>
     
+    <!-- Wrist Card -->
     <div class="card" id="wrist">
         <h2>Wrist</h2>
         <table>
             <tr>
                 <th></th>
-                <th><strong>Flexion</strong></th>
-                <th><strong>Extension</strong></th>
-                <th><strong>Ankylosis</strong></th>
+                <th>Flexion</th>
+                <th>Extension</th>
+                <th>Ankylosis</th>
                 <th>Imp%</th>
             </tr>
             <tr>
@@ -68,9 +76,9 @@
             </tr>
             <tr>
                 <th></th>
-                <th><strong>Radial Deviation</strong></th>
-                <th><strong>Ulnar Deviation</strong></th>
-                <th><strong>Ankylosis</strong></th>
+                <th>Radial Deviation</th>
+                <th>Ulnar Deviation</th>
+                <th>Ankylosis</th>
                 <th>Imp%</th>
             </tr>
             <tr>
@@ -90,14 +98,15 @@
         <p class="total">Total Wrist Impairment: <span id="wrist-total-imp"></span>%</p>
     </div>
 
+    <!-- Elbow Card -->
     <div class="card" id="elbow">
         <h2>Elbow</h2>
         <table>
             <tr>
                 <th></th>
-                <th><strong>Flexion</strong></th>
-                <th><strong>Extension</strong></th>
-                <th><strong>Ankylosis</strong></th>
+                <th>Flexion</th>
+                <th>Extension</th>
+                <th>Ankylosis</th>
                 <th>Imp%</th>
             </tr>
             <tr>
@@ -115,9 +124,9 @@
             </tr>
             <tr>
                 <th></th>
-                <th><strong>Pronation</strong></th>
-                <th><strong>Supination</strong></th>
-                <th><strong>Ankylosis</strong></th>
+                <th>Pronation</th>
+                <th>Supination</th>
+                <th>Ankylosis</th>
                 <th>Imp%</th>
             </tr>
             <tr>
@@ -137,14 +146,15 @@
         <p class="total">Total Elbow Impairment: <span id="elbow-total-imp"></span>%</p>
     </div>
 
+    <!-- Shoulder Card -->
     <div class="card" id="shoulder">
         <h2>Shoulder</h2>
         <table>
             <tr>
                 <th></th>
-                <th><strong>Flexion</strong></th>
-                <th><strong>Extension</strong></th>
-                <th><strong>Ankylosis</strong></th>
+                <th>Flexion</th>
+                <th>Extension</th>
+                <th>Ankylosis</th>
                 <th>Imp%</th>
             </tr>
             <tr>
@@ -162,9 +172,9 @@
             </tr>
             <tr>
                 <th></th>
-                <th><strong>Abduction</strong></th>
-                <th><strong>Adduction</strong></th>
-                <th><strong>Ankylosis</strong></th>
+                <th>Abduction</th>
+                <th>Adduction</th>
+                <th>Ankylosis</th>
                 <th>Imp%</th>
             </tr>
             <tr>
@@ -182,9 +192,9 @@
             </tr>
             <tr>
                 <th></th>
-                <th><strong>Internal Rotation</strong></th>
-                <th><strong>External Rotation</strong></th>
-                <th><strong>Ankylosis</strong></th>
+                <th>Internal Rotation</th>
+                <th>External Rotation</th>
+                <th>Ankylosis</th>
                 <th>Imp%</th>
             </tr>
             <tr>
