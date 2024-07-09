@@ -63,6 +63,23 @@
         .total {
             font-weight: bold;
         }
+        .clear-button {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .clear-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -231,9 +248,30 @@
         </table>
         <p class="total">Total Shoulder Impairment: <span id="shoulder-total-imp"></span>%</p>
     </div>
+    
+    <!-- Clear All Button -->
+    <button id="clearAllButton" class="clear-button">Clear All</button>
 
     <script>
-        // JavaScript code will be added here
+        // Function to clear all inputs and results
+        function clearAll() {
+            // Clear all input fields
+            const inputs = document.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => input.value = '');
+
+            // Clear all impairment percentage displays
+            const impDisplays = document.querySelectorAll('[id$="-imp"]');
+            impDisplays.forEach(display => display.textContent = '');
+
+            // Clear total impairment displays
+            const totalImps = document.querySelectorAll('[id$="-total-imp"]');
+            totalImps.forEach(total => total.textContent = '');
+        }
+
+        // Add event listener to the Clear All button
+        document.getElementById('clearAllButton').addEventListener('click', clearAll);
+
+        // Additional JavaScript for calculations will be added here
     </script>
 </body>
 </html>
