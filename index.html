@@ -1495,7 +1495,15 @@ function calculateMovementImpairment(joint, movement, dataArray) {
         const inputElement = document.getElementById(`${joint}-${mov}-angle`);
         if (inputElement) {
             const angle = parseFloat(inputElement.value);
-            const imp = calculateImpairment(angle, dataArray, mov, `ue${mov.charAt(0).toUpperCase() + mov.slice(1)}`);
+            let impairmentKey = `ue${mov.charAt(0).toUpperCase() + mov.slice(1)}`;
+            
+            // Special handling for rd, ud, introt, and extrot
+            if (mov === 'rd') impairmentKey = 'ueRadialDeviation';
+            if (mov === 'ud') impairmentKey = 'ueUlnarDeviation';
+            if (mov === 'introt') impairmentKey = 'ueInternalRotation';
+            if (mov === 'extrot') impairmentKey = 'ueExternalRotation';
+
+            const imp = calculateImpairment(angle, dataArray, mov, impairmentKey);
             const impElement = document.getElementById(`${joint}-${mov}-imp`);
             if (impElement) {
                 impElement.textContent = imp;
