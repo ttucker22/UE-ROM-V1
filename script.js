@@ -1157,17 +1157,28 @@ const SHOULDERInternalExternalRotationData = [
     { internalRotation: '<-90', ueInternalRotation: 12, externalRotation: '>90', ueExternalRotation: 0, ankylosis: '<-90', ueAnkylosis: 12 }
 ];
 
+console.log("Script loaded");
+
 document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOM fully loaded");
+
     // Set up input handlers for all joints
     setupJointHandlers('wrist');
     setupJointHandlers('elbow');
     setupJointHandlers('shoulder');
 
     // Set up Clear All button
-    document.getElementById('clearAllButton').addEventListener('click', clearAll);
+    const clearAllButton = document.getElementById('clearAllButton');
+    if (clearAllButton) {
+        clearAllButton.addEventListener('click', clearAll);
+        console.log("Clear All button listener attached");
+    } else {
+        console.error("Clear All button not found");
+    }
 });
 
 function setupJointHandlers(joint) {
+    console.log(`Setting up handlers for ${joint}`);
     const movements = {
         'wrist': ['flexion', 'extension', 'rd', 'ud'],
         'elbow': ['flexion', 'extension', 'pronation', 'supination'],
@@ -1175,11 +1186,16 @@ function setupJointHandlers(joint) {
     };
 
     movements[joint].forEach(movement => {
-        const input = document.getElementById(`${joint}-${movement}-angle`);
+        const inputId = `${joint}-${movement}-angle`;
+        const input = document.getElementById(inputId);
         if (input) {
             input.addEventListener('input', function() {
+                console.log(`Input event on ${inputId}`);
                 calculateJointImpairment(joint);
             });
+            console.log(`Handler set for ${inputId}`);
+        } else {
+            console.error(`Input not found: ${inputId}`);
         }
     });
 
@@ -1187,12 +1203,15 @@ function setupJointHandlers(joint) {
     const ankylosisInputs = document.querySelectorAll(`#${joint} input[id$="-ankylosis-angle"]`);
     ankylosisInputs.forEach(input => {
         input.addEventListener('input', function() {
+            console.log(`Ankylosis input event on ${input.id}`);
             calculateJointImpairment(joint);
         });
+        console.log(`Handler set for ankylosis input ${input.id}`);
     });
 }
 
 function calculateJointImpairment(joint) {
+    console.log(`Calculating impairment for ${joint}`);
     let totalImp = 0;
 
     if (joint === 'wrist') {
@@ -1208,10 +1227,17 @@ function calculateJointImpairment(joint) {
     }
 
     const wpi = (totalImp * 0.6).toFixed(1);
-    document.getElementById(`${joint}-total-imp`).textContent = `${totalImp} UE = ${wpi} WPI`;
+    const totalImpElement = document.getElementById(`${joint}-total-imp`);
+    if (totalImpElement) {
+        totalImpElement.textContent = `${totalImp} UE = ${wpi} WPI`;
+        console.log(`Updated total impairment for ${joint}: ${totalImp} UE = ${wpi} WPI`);
+    } else {
+        console.error(`Total impairment element not found for ${joint}`);
+    }
 }
 
 function calculateMovementImpairment(joint, movement, dataArray) {
+    console.log(`Calculating ${movement} impairment for ${joint}`);
     const movements = movement === 'flexext' ? ['flexion', 'extension'] :
                       movement === 'rdud' ? ['rd', 'ud'] :
                       movement === 'prosup' ? ['pronation', 'supination'] :
@@ -1221,20 +1247,48 @@ function calculateMovementImpairment(joint, movement, dataArray) {
     let maxImp = 0;
 
     movements.forEach(mov => {
-        const angle = parseFloat(document.getElementById(`${joint}-${mov}-angle`).value);
-        const imp = calculateImpairment(angle, dataArray, mov, `ue${mov.charAt(0).toUpperCase() + mov.slice(1)}`);
-        document.getElementById(`${joint}-${mov}-imp`).textContent = imp;
-        maxImp = Math.max(maxImp, imp);
+        const inputElement = document.getElementById(`${joint}-${mov}-angle`);
+        if (inputElement) {
+            const angle = parseFloat(inputElement.value);
+            const imp = calculateImpairment(angle, dataArray, mov, `ue${mov.charAt(0).toUpperCase() + mov.slice(1)}`);
+            const impElement = document.getElementById(`${joint}-${mov}-imp`);
+            if (impElement) {
+                impElement.textContent = imp;
+                console.log(`${joint} ${mov} impairment: ${imp}`);
+            } else {
+                console.error(`Impairment element not found for ${joint}-${mov}`);
+            }
+            maxImp = Math.max(maxImp, imp);
+        } else {
+            console.error(`Input element not found for ${joint}-${mov}-angle`);
+        }
     });
 
-    const ankylosisAngle = parseFloat(document.getElementById(`${joint}-${movement}-ankylosis-angle`).value);
-    const ankylosisImp = calculateImpairment(ankylosisAngle, dataArray, 'ankylosis', 'ueAnkylosis');
-    document.getElementById(`${joint}-${movement}-ankylosis-imp`).textContent = ankylosisImp;
+    const ankylosisInputElement = document.getElementById(`${joint}-${movement}-ankylosis-angle`);
+    if (ankylosisInputElement) {
+        const ankylosisAngle = parseFloat(ankylosisInputElement.value);
+        const ankylosisImp = calculateImpairment(ankylosisAngle, dataArray, 'ankylosis', 'ueAnkylosis');
+        const ankylosisImpElement = document.getElementById(`${joint}-${movement}-ankylosis-imp`);
+        if (ankylosisImpElement) {
+            ankylosisImpElement.textContent = ankylosisImp;
+            console.log(`${joint} ${movement} ankylosis impairment: ${ankylosisImp}`);
+        } else {
+            console.error(`Ankylosis impairment element not found for ${joint}-${movement}`);
+        }
+        maxImp = Math.max(maxImp, ankylosisImp);
+    } else {
+        console.error(`Ankylosis input element not found for ${joint}-${movement}`);
+    }
 
-    const totalImp = Math.max(maxImp, ankylosisImp);
-    document.getElementById(`${joint}-${movement}-imp`).textContent = totalImp;
+    const totalImpElement = document.getElementById(`${joint}-${movement}-imp`);
+    if (totalImpElement) {
+        totalImpElement.textContent = maxImp;
+        console.log(`${joint} ${movement} total impairment: ${maxImp}`);
+    } else {
+        console.error(`Total impairment element not found for ${joint}-${movement}`);
+    }
 
-    return totalImp;
+    return maxImp;
 }
 
 function calculateImpairment(angle, dataArray, angleKey, impairmentKey) {
@@ -1258,9 +1312,13 @@ function calculateImpairment(angle, dataArray, angleKey, impairmentKey) {
 }
 
 function clearAll() {
+    console.log("Clear All function called");
     const inputs = document.querySelectorAll('input[type="number"]');
     inputs.forEach(input => {
         input.value = '';
         input.dispatchEvent(new Event('input'));
+        console.log(`Cleared input: ${input.id}`);
     });
 }
+
+console.log("Script fully loaded");
