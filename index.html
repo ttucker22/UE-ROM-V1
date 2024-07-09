@@ -1551,12 +1551,15 @@ function calculateMovementImpairment(joint, movement, dataArray) {
 
 function calculateImpairment(angle, dataArray, angleKey, impairmentKey) {
     console.log(`Calculating impairment for angle: ${angle}, angleKey: ${angleKey}, impairmentKey: ${impairmentKey}`);
-    console.log('Data Array:', dataArray);
 
     if (isNaN(angle)) {
         console.log('Angle is NaN, returning 0');
         return 0;
     }
+
+    // Handle negative angles for ulnar deviation
+    const isUlnarDeviation = angleKey === 'ulnarDeviation';
+    const adjustedAngle = isUlnarDeviation ? Math.abs(angle) : angle;
 
     for (let i = 0; i < dataArray.length; i++) {
         const currentAngle = dataArray[i][angleKey];
@@ -1564,14 +1567,26 @@ function calculateImpairment(angle, dataArray, angleKey, impairmentKey) {
 
         console.log(`Checking range: currentAngle = ${currentAngle}, nextAngle = ${nextAngle}`);
 
-        if (
-            (typeof currentAngle === 'string' && currentAngle.startsWith('>') && angle >= parseFloat(currentAngle.substring(1))) ||
-            (typeof currentAngle === 'string' && currentAngle.startsWith('<') && angle <= parseFloat(currentAngle.substring(1))) ||
-            angle === currentAngle ||
-            (nextAngle !== null && angle > currentAngle && angle <= nextAngle)
-        ) {
-            console.log(`Match found. Returning impairment: ${dataArray[i][impairmentKey]}`);
+        // Handle string comparisons (for >, <)
+        if (typeof currentAngle === 'string') {
+            if (currentAngle.startsWith('>') && adjustedAngle >= parseFloat(currentAngle.substring(1))) {
+                return dataArray[i][impairmentKey];
+            }
+            if (currentAngle.startsWith('<') && adjustedAngle <= parseFloat(currentAngle.substring(1))) {
+                return dataArray[i][impairmentKey];
+            }
+        } 
+        // Handle numeric comparisons
+        else if (adjustedAngle === currentAngle) {
             return dataArray[i][impairmentKey];
+        }
+        else if (nextAngle !== null) {
+            const lowerBound = isUlnarDeviation ? Math.min(Math.abs(currentAngle), Math.abs(nextAngle)) : Math.min(currentAngle, nextAngle);
+            const upperBound = isUlnarDeviation ? Math.max(Math.abs(currentAngle), Math.abs(nextAngle)) : Math.max(currentAngle, nextAngle);
+            
+            if (adjustedAngle > lowerBound && adjustedAngle <= upperBound) {
+                return dataArray[i][impairmentKey];
+            }
         }
     }
 
