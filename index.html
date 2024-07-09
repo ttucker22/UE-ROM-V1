@@ -1478,14 +1478,7 @@ function calculateJointImpairment(joint) {
         totalImp += calculateMovementImpairment('shoulder', 'rotation', SHOULDERInternalExternalRotationData);
     }
 
-    const wpi = (totalImp * 0.6).toFixed(1);
-    const totalImpElement = document.getElementById(`${joint}-total-imp`);
-    if (totalImpElement) {
-        totalImpElement.textContent = `${totalImp} UE = ${wpi} WPI`;
-        console.log(`Updated total impairment for ${joint}: ${totalImp} UE = ${wpi} WPI`);
-    } else {
-        console.error(`Total impairment element not found for ${joint}`);
-    }
+    updateTotalImpairment(joint);
 }
 
 function calculateMovementImpairment(joint, movement, dataArray) {
@@ -1561,6 +1554,43 @@ function calculateImpairment(angle, dataArray, angleKey, impairmentKey) {
     }
 
     return 0;
+}
+
+function updateTotalImpairment(joint) {
+    let impairments = [];
+    let totalImp = 0;
+
+    if (joint === 'wrist') {
+        const flexExtImp = parseFloat(document.getElementById(`${joint}-flexext-imp`).textContent) || 0;
+        const rdudImp = parseFloat(document.getElementById(`${joint}-rdud-imp`).textContent) || 0;
+        impairments = [flexExtImp, rdudImp];
+        totalImp = flexExtImp + rdudImp;
+    } else if (joint === 'elbow') {
+        const flexExtImp = parseFloat(document.getElementById(`${joint}-flexext-imp`).textContent) || 0;
+        const proSupImp = parseFloat(document.getElementById(`${joint}-prosup-imp`).textContent) || 0;
+        impairments = [flexExtImp, proSupImp];
+        totalImp = flexExtImp + proSupImp;
+    } else if (joint === 'shoulder') {
+        const flexExtImp = parseFloat(document.getElementById(`${joint}-flexext-imp`).textContent) || 0;
+        const abdAddImp = parseFloat(document.getElementById(`${joint}-abdadd-imp`).textContent) || 0;
+        const rotationImp = parseFloat(document.getElementById(`${joint}-rotation-imp`).textContent) || 0;
+        impairments = [flexExtImp, abdAddImp, rotationImp];
+        totalImp = flexExtImp + abdAddImp + rotationImp;
+    }
+
+    const wpiExact = totalImp * 0.6;
+    const wpi = wpiExact % 1 >= 0.5 ? Math.ceil(wpiExact) : Math.floor(wpiExact);
+    
+    const breakdownString = impairments.filter(imp => imp > 0).join(' + ');
+    const totalString = breakdownString ? `${breakdownString} = ${totalImp}` : totalImp.toString();
+    
+    const totalImpElement = document.getElementById(`${joint}-total-imp`);
+    if (totalImpElement) {
+        totalImpElement.textContent = `Total: ${totalString} UE = ${wpi} WPI`;
+        console.log(`Updated total impairment for ${joint}: ${totalString} UE = ${wpi} WPI`);
+    } else {
+        console.error(`Total impairment element not found for ${joint}`);
+    }
 }
 
 function clearAll() {
