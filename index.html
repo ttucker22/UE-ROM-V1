@@ -1522,7 +1522,7 @@ function calculateMovementImpairment(joint, movement, dataArray) {
             if (mov === 'introt') { angleKey = 'internalRotation'; impairmentKey = 'ueInternalRotation'; }
             if (mov === 'extrot') { angleKey = 'externalRotation'; impairmentKey = 'ueExternalRotation'; }
 
-            printRelevantData(angle, dataArray, angleKey);
+            console.log(`Calculating for ${mov}: angle = ${angle}, angleKey = ${angleKey}, impairmentKey = ${impairmentKey}`);
             const imp = calculateImpairment(angle, dataArray, angleKey, impairmentKey);
             console.log(`${mov} angle: ${angle}, impairment: ${imp}`);
             sumImp += imp;
@@ -1572,6 +1572,13 @@ function calculateImpairment(angle, dataArray, angleKey, impairmentKey) {
     const isUlnarDeviation = angleKey === 'ulnarDeviation';
     const absAngle = Math.abs(angle);
 
+    if (isUlnarDeviation) {
+        console.log("Ulnar Deviation Data:");
+        dataArray.forEach(item => {
+            console.log(`Angle: ${item.ulnarDeviation}, Impairment: ${item.ueUlnarDeviation}`);
+        });
+    }
+
     for (let i = 0; i < dataArray.length; i++) {
         const currentAngle = dataArray[i][angleKey];
         const nextAngle = i < dataArray.length - 1 ? dataArray[i + 1][angleKey] : null;
@@ -1587,7 +1594,7 @@ function calculateImpairment(angle, dataArray, angleKey, impairmentKey) {
             }
         } else if (isUlnarDeviation) {
             // For ulnar deviation, we need to find the correct range
-            if (absAngle <= Math.abs(currentAngle) && (nextAngle === null || absAngle > Math.abs(nextAngle))) {
+            if (absAngle === Math.abs(currentAngle) || (nextAngle !== null && absAngle > Math.abs(currentAngle) && absAngle <= Math.abs(nextAngle))) {
                 console.log(`Match found for ulnar deviation: ${dataArray[i][impairmentKey]}`);
                 return dataArray[i][impairmentKey];
             }
@@ -1601,7 +1608,6 @@ function calculateImpairment(angle, dataArray, angleKey, impairmentKey) {
     console.log('No match found, returning 0');
     return 0;
 }
-
 function updateTotalImpairment(joint) {
     let impairments = [];
     let totalImp = 0;
