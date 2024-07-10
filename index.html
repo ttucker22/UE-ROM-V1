@@ -1429,7 +1429,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-function setupJointHandlers(joint) {
+// Utility functions
+function printRelevantData(angle, dataArray, angleKey) {
+    console.log("Relevant data:");
+    for (let i = 0; i < dataArray.length; i++) {
+        if (Math.abs(dataArray[i][angleKey]) >= Math.abs(angle) - 2 && Math.abs(dataArray[i][angleKey]) <= Math.abs(angle) + 2) {
+            console.log(dataArray[i]);
+        }
+    }
+}
+        
+    function setupJointHandlers(joint) {
     console.log(`Setting up handlers for ${joint}`);
     const movements = {
         'wrist': ['flexion', 'extension', 'rd', 'ud'],
@@ -1512,6 +1522,7 @@ function calculateMovementImpairment(joint, movement, dataArray) {
             if (mov === 'introt') { angleKey = 'internalRotation'; impairmentKey = 'ueInternalRotation'; }
             if (mov === 'extrot') { angleKey = 'externalRotation'; impairmentKey = 'ueExternalRotation'; }
 
+            printRelevantData(angle, dataArray, angleKey);
             const imp = calculateImpairment(angle, dataArray, angleKey, impairmentKey);
             console.log(`${mov} angle: ${angle}, impairment: ${imp}`);
             sumImp += imp;
@@ -1575,8 +1586,9 @@ function calculateImpairment(angle, dataArray, angleKey, impairmentKey) {
                 return dataArray[i][impairmentKey];
             }
         } else if (isUlnarDeviation) {
-            if (absAngle === Math.abs(currentAngle) || (nextAngle !== null && absAngle > Math.abs(currentAngle) && absAngle <= Math.abs(nextAngle))) {
-                console.log(`Match found: ${dataArray[i][impairmentKey]}`);
+            // For ulnar deviation, we need to find the correct range
+            if (absAngle <= Math.abs(currentAngle) && (nextAngle === null || absAngle > Math.abs(nextAngle))) {
+                console.log(`Match found for ulnar deviation: ${dataArray[i][impairmentKey]}`);
                 return dataArray[i][impairmentKey];
             }
         } else {
